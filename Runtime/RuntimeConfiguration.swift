@@ -1,5 +1,26 @@
 import Foundation
 
+struct RuntimeRemoteConfig: Codable, Sendable {
+    var runtimePaths: RuntimePathConfig?
+    var battleNetInstallerDownloadURL: String?
+    var defaultD2RExecutablePath: String?
+    var wineDebug: String?
+    var enableDXVK: Bool?
+    var enableVKD3D: Bool?
+    var useVirtualDesktop: Bool?
+    var virtualDesktopResolution: String?
+    var dllOverrides: [String: String]?
+    var windowedMode: Bool?
+}
+
+struct RuntimeValidationManifest: Sendable {
+    let runtimeRoot: URL
+    let wine64: URL
+    let wineserver: URL
+    let wineboot: URL
+    let installer: URL
+}
+
 struct RuntimeConfiguration: Sendable {
     let owner: String
     let repo: String

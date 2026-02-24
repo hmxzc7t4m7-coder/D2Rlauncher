@@ -27,3 +27,28 @@ struct GitHubRelease: Decodable, Sendable {
         case assets
     }
 }
+
+struct RuntimeReleaseAssets: Sendable {
+    let archive: GitHubRelease.Asset
+    let checksum: GitHubRelease.Asset
+    let remoteConfig: GitHubRelease.Asset?
+}
+
+extension GitHubRelease {
+    func selectedRuntimeAssets(
+        archiveName: String,
+        checksumName: String,
+        remoteConfigName: String
+    ) throws -> RuntimeReleaseAssets {
+        guard let archive = assets.first(where: { $0.name == archiveName }) else {
+            throw AppError.operationFailed("Release \(tagName) is missing required asset: \(archiveName)")
+        }
+
+        guard let checksum = assets.first(where: { $0.name == checksumName }) else {
+            throw AppError.operationFailed("Release \(tagName) is missing required asset: \(checksumName)")
+        }
+
+        let remoteConfig = assets.first(where: { $0.name == remoteConfigName })
+        return RuntimeReleaseAssets(archive: archive, checksum: checksum, remoteConfig: remoteConfig)
+    }
+}
