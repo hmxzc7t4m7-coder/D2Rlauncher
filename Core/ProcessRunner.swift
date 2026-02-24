@@ -7,6 +7,27 @@ struct ProcessResult: Sendable {
 }
 
 final class ProcessRunner {
+    struct DetachedProcessHandle: Sendable {
+        let pid: Int32
+    }
+
+    private final class DetachedProcessStore {
+        private let queue = DispatchQueue(label: "D2RLauncher.ProcessRunner.DetachedStore")
+        private var active: [Int32: Process] = [:]
+
+        func retain(_ process: Process) {
+            queue.sync {
+                active[process.processIdentifier] = process
+            }
+        }
+
+        func release(pid: Int32) {
+            queue.sync {
+                active.removeValue(forKey: pid)
+            }
+        }
+    }
+
     private final class OutputAccumulator: @unchecked Sendable {
         private let queue = DispatchQueue(label: "D2RLauncher.ProcessRunner.Accumulator")
         private var stdout = ""
@@ -55,6 +76,8 @@ final class ProcessRunner {
             remainder = parts.last ?? ""
         }
     }
+
+    private let detachedStore = DetachedProcessStore()
 
     func run(
         executableURL: URL,
@@ -115,6 +138,38 @@ final class ProcessRunner {
                 stderrPipe.fileHandleForReading.readabilityHandler = nil
                 continuation.resume(throwing: AppError.processLaunchFailed(error.localizedDescription))
             }
+        }
+    }
+
+    func launchDetached(
+        executableURL: URL,
+        arguments: [String],
+        environment: [String: String] = [:],
+        currentDirectoryURL: URL? = nil
+    ) throws -> DetachedProcessHandle {
+        let process = Process()
+        process.executableURL = executableURL
+        process.arguments = arguments
+        process.currentDirectoryURL = currentDirectoryURL
+        process.standardOutput = Pipe()
+        process.standardError = Pipe()
+
+        var mergedEnvironment = ProcessInfo.processInfo.environment
+        for (key, value) in environment {
+            mergedEnvironment[key] = value
+        }
+        process.environment = mergedEnvironment
+
+        process.terminationHandler = { [detachedStore] completed in
+            detachedStore.release(pid: completed.processIdentifier)
+        }
+
+        do {
+            try process.run()
+            detachedStore.retain(process)
+            return DetachedProcessHandle(pid: process.processIdentifier)
+        } catch {
+            throw AppError.processLaunchFailed(error.localizedDescription)
         }
     }
 }

@@ -1,13 +1,23 @@
+import AppKit
 import Foundation
+import UniformTypeIdentifiers
 
 @MainActor
 final class AppViewModel: ObservableObject {
+    private enum DefaultsKey {
+        static let d2rExecutablePath = "d2rExecutablePath"
+    }
+
     @Published var isBusy = false
     @Published var statusBanner: String = "Ready"
     @Published var runtimeTag: String?
     @Published var currentRuntimePath: String = "Not installed"
     @Published var prefixPath: String = AppPaths.battleNetPrefix.path
-    @Published var d2rExecutablePath: String = AppPaths.defaultD2RExecutablePath()
+    @Published var d2rExecutablePath: String = AppPaths.defaultD2RExecutablePath() {
+        didSet {
+            UserDefaults.standard.set(d2rExecutablePath, forKey: DefaultsKey.d2rExecutablePath)
+        }
+    }
     @Published var showingSettingsSheet = false
     @Published var showingLicensesSheet = false
     @Published var showSafeResetConfirmation = false
@@ -19,11 +29,25 @@ final class AppViewModel: ObservableObject {
     let taskCoordinator = TaskCoordinator()
     let processRunner = ProcessRunner()
 
-    private lazy var runtimeService = RuntimeService(config: config, logger: logger, processRunner: processRunner)
-    private lazy var prefixService = PrefixService(config: config, logger: logger, processRunner: processRunner)
-    private lazy var battleNetService = BattleNetService(config: config, logger: logger, processRunner: processRunner)
-    private lazy var repairService = RepairService(config: config, logger: logger, processRunner: processRunner)
-    private lazy var diagnosticsExporter = DiagnosticsExporter(config: config, logger: logger, processRunner: processRunner)
+    private var runtimeService: RuntimeService {
+        RuntimeService(config: config, logger: logger, processRunner: processRunner)
+    }
+
+    private var prefixService: PrefixService {
+        PrefixService(config: config, logger: logger, processRunner: processRunner)
+    }
+
+    private var battleNetService: BattleNetService {
+        BattleNetService(config: config, logger: logger, processRunner: processRunner)
+    }
+
+    private var repairService: RepairService {
+        RepairService(config: config, logger: logger, processRunner: processRunner)
+    }
+
+    private var diagnosticsExporter: DiagnosticsExporter {
+        DiagnosticsExporter(config: config, logger: logger, processRunner: processRunner)
+    }
 
     func bootstrap() async {
         do {
@@ -40,7 +64,11 @@ final class AppViewModel: ObservableObject {
     }
 
     func refreshDerivedPaths() async {
-        d2rExecutablePath = config.defaultD2RExecutablePath
+        if let persisted = UserDefaults.standard.string(forKey: DefaultsKey.d2rExecutablePath), !persisted.isEmpty {
+            d2rExecutablePath = persisted
+        } else {
+            d2rExecutablePath = config.defaultD2RExecutablePath
+        }
     }
 
     func runAction(_ name: String, operation: @escaping @MainActor () async throws -> Void) {
@@ -100,6 +128,56 @@ final class AppViewModel: ObservableObject {
         }
     }
 
+    func chooseBattleNetInstaller() {
+        guard let runtimeRoot = runtimeService.currentRuntimeRoot() else {
+            lastErrorMessage = AppError.runtimeNotInstalled.errorDescription
+            return
+        }
+
+        let panel = NSOpenPanel()
+        panel.title = "Select Battle.net Installer"
+        panel.prompt = "Use Installer"
+        panel.allowedContentTypes = [.data]
+        panel.canChooseDirectories = false
+        panel.allowsMultipleSelection = false
+
+        guard panel.runModal() == .OK, let sourceURL = panel.url else {
+            return
+        }
+
+        runAction("Import Battle.net Installer") {
+            try self.battleNetService.importBattleNetInstaller(from: sourceURL, runtimeRoot: runtimeRoot)
+            self.logger.log(.info, "Imported installer to runtime \(runtimeRoot.lastPathComponent)")
+        }
+    }
+
+    func downloadBattleNetInstaller() {
+        guard let runtimeRoot = runtimeService.currentRuntimeRoot() else {
+            lastErrorMessage = AppError.runtimeNotInstalled.errorDescription
+            return
+        }
+        guard
+            let rawURL = config.battleNetInstallerDownloadURL,
+            let sourceURL = URL(string: rawURL)
+        else {
+            lastErrorMessage = "No Battle.net installer URL configured."
+            return
+        }
+
+        runAction("Download Battle.net Installer") {
+            try await self.battleNetService.downloadBattleNetInstaller(
+                from: sourceURL,
+                runtimeRoot: runtimeRoot,
+                progress: { fraction in
+                    Task { @MainActor in
+                        self.statusBanner = "Downloading installer \(Int(fraction * 100))%"
+                    }
+                }
+            )
+            self.logger.log(.info, "Downloaded Battle.net installer from \(sourceURL.absoluteString)")
+        }
+    }
+
     func launchBattleNet() {
         runAction("Launch Battle.net") {
             guard let runtimeRoot = self.runtimeService.currentRuntimeRoot() else {
@@ -107,6 +185,22 @@ final class AppViewModel: ObservableObject {
             }
             try await self.battleNetService.launchBattleNet(runtimeRoot: runtimeRoot)
         }
+    }
+
+    func chooseD2RExecutable() {
+        let panel = NSOpenPanel()
+        panel.title = "Select D2R.exe"
+        panel.prompt = "Use Executable"
+        panel.allowedContentTypes = [.data]
+        panel.canChooseDirectories = false
+        panel.allowsMultipleSelection = false
+
+        guard panel.runModal() == .OK, let selectedURL = panel.url else {
+            return
+        }
+
+        d2rExecutablePath = selectedURL.path
+        logger.log(.info, "Selected D2R executable: \(selectedURL.path)")
     }
 
     func launchD2R() {
@@ -165,6 +259,7 @@ final class AppViewModel: ObservableObject {
 
     func resetConfigToDefaults() {
         config = .defaultConfig()
+        d2rExecutablePath = config.defaultD2RExecutablePath
     }
 
     private func fail(_ error: Error) async {

@@ -82,12 +82,22 @@ struct ContentView: View {
     private var battleNetSection: some View {
         SectionBox(title: "Battle.net / D2R") {
             VStack(alignment: .leading, spacing: 8) {
-                TextField("D2R executable path", text: $viewModel.d2rExecutablePath)
-                    .textFieldStyle(.roundedBorder)
-                    .font(.system(.body, design: .monospaced))
+                HStack {
+                    TextField("D2R executable path", text: $viewModel.d2rExecutablePath)
+                        .textFieldStyle(.roundedBorder)
+                        .font(.system(.body, design: .monospaced))
+                    Button("Browse…") { viewModel.chooseD2RExecutable() }
+                }
 
                 HStack {
                     Button("Install Battle.net") { viewModel.installBattleNet() }
+                    Button("Select Installer…") { viewModel.chooseBattleNetInstaller() }
+                    if viewModel.config.battleNetInstallerDownloadURL != nil {
+                        Button("Download Installer") { viewModel.downloadBattleNetInstaller() }
+                    }
+                }
+
+                HStack {
                     Button("Launch Battle.net") { viewModel.launchBattleNet() }
                     Button("Launch D2R") { viewModel.launchD2R() }
                 }

@@ -27,14 +27,14 @@ final class RepairService {
     }
 
     func clearBattleNetCaches() async throws {
-        let paths = [
-            AppPaths.battleNetPrefix
-                .appendingPathComponent("drive_c/users/crossover/AppData/Roaming/Battle.net"),
-            AppPaths.battleNetPrefix
-                .appendingPathComponent("drive_c/users/crossover/AppData/Local/Battle.net"),
-            AppPaths.battleNetPrefix
-                .appendingPathComponent("drive_c/ProgramData/Battle.net")
-        ]
+        let usersRoot = AppPaths.battleNetPrefix.appendingPathComponent("drive_c/users", isDirectory: true)
+        let userDirectories = try wineUserDirectories(usersRoot: usersRoot)
+
+        var paths = [AppPaths.battleNetPrefix.appendingPathComponent("drive_c/ProgramData/Battle.net", isDirectory: true)]
+        for userDirectory in userDirectories {
+            paths.append(userDirectory.appendingPathComponent("AppData/Roaming/Battle.net", isDirectory: true))
+            paths.append(userDirectory.appendingPathComponent("AppData/Local/Battle.net", isDirectory: true))
+        }
 
         for path in paths where FileManager.default.fileExists(atPath: path.path) {
             try FileManager.default.removeItem(at: path)
@@ -43,12 +43,13 @@ final class RepairService {
     }
 
     func resetBlizzardAgent() async throws {
-        let paths = [
-            AppPaths.battleNetPrefix
-                .appendingPathComponent("drive_c/ProgramData/Battle.net/Agent"),
-            AppPaths.battleNetPrefix
-                .appendingPathComponent("drive_c/users/crossover/AppData/ProgramData/Battle.net/Agent")
-        ]
+        let usersRoot = AppPaths.battleNetPrefix.appendingPathComponent("drive_c/users", isDirectory: true)
+        let userDirectories = try wineUserDirectories(usersRoot: usersRoot)
+
+        var paths = [AppPaths.battleNetPrefix.appendingPathComponent("drive_c/ProgramData/Battle.net/Agent", isDirectory: true)]
+        for userDirectory in userDirectories {
+            paths.append(userDirectory.appendingPathComponent("AppData/ProgramData/Battle.net/Agent", isDirectory: true))
+        }
 
         for path in paths where FileManager.default.fileExists(atPath: path.path) {
             try FileManager.default.removeItem(at: path)
@@ -73,6 +74,20 @@ final class RepairService {
         if launchAfterReset {
             let battleNetService = BattleNetService(config: config, logger: logger, processRunner: processRunner)
             try await battleNetService.launchBattleNet(runtimeRoot: runtimeRoot)
+        }
+    }
+
+    private func wineUserDirectories(usersRoot: URL) throws -> [URL] {
+        let fileManager = FileManager.default
+        guard fileManager.fileExists(atPath: usersRoot.path) else {
+            return []
+        }
+
+        let ignored = Set(["Public", "All Users", "Default", "Default User"])
+        let items = try fileManager.contentsOfDirectory(at: usersRoot, includingPropertiesForKeys: [.isDirectoryKey])
+        return items.filter { url in
+            let isDirectory = (try? url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) ?? false
+            return isDirectory && !ignored.contains(url.lastPathComponent)
         }
     }
 }
