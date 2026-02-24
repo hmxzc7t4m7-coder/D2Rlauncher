@@ -37,8 +37,8 @@ struct AppConfig: Codable, Sendable {
 
     static func defaultConfig() -> AppConfig {
         AppConfig(
-            runtimeRepoOwner: "YOUR_GH_OWNER",
-            runtimeRepoName: "YOUR_GH_REPO",
+            runtimeRepoOwner: "hmxzc7t4m7-coder",
+            runtimeRepoName: "D2Rlauncher",
             runtimeAssetName: "d2r-runtime-macos.tar.gz",
             runtimeSHAAssetName: "d2r-runtime-macos.tar.gz.sha256",
             runtimeRemoteConfigName: "d2r-config.json",
