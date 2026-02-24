@@ -33,7 +33,7 @@ Edit these values:
 ## Runtime Release Setup (GitHub)
 App expects latest release from:
 
-`https://api.github.com/repos/YOUR_GH_OWNER/YOUR_GH_REPO/releases/latest`
+`https://api.github.com/repos/hmxzc7t4m7-coder/D2Rlauncher/releases/latest`
 
 Each release must include:
 - `d2r-runtime-macos.tar.gz`
