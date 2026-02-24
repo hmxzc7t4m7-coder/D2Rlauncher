@@ -6,6 +6,12 @@ struct SettingsSheetView: View {
     var body: some View {
         NavigationStack {
             Form {
+                Section("Remote Defaults") {
+                    Text(viewModel.remoteConfigStatus)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+
                 Section("GitHub Runtime Repo") {
                     TextField("Owner", text: $viewModel.config.runtimeRepoOwner)
                     TextField("Repo", text: $viewModel.config.runtimeRepoName)

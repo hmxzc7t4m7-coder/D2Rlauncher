@@ -6,6 +6,7 @@ import UniformTypeIdentifiers
 final class AppViewModel: ObservableObject {
     private enum DefaultsKey {
         static let d2rExecutablePath = "d2rExecutablePath"
+        static let configOverride = "configOverride"
     }
 
     @Published var isBusy = false
@@ -21,13 +22,21 @@ final class AppViewModel: ObservableObject {
     @Published var showingSettingsSheet = false
     @Published var showingLicensesSheet = false
     @Published var showSafeResetConfirmation = false
-    @Published var config: AppConfig = .defaultConfig()
+    @Published var config: AppConfig = .defaultConfig() {
+        didSet {
+            persistConfigOverrideIfNeeded()
+        }
+    }
+    @Published var remoteConfigStatus: String = "Built-in defaults"
     @Published var lastErrorMessage: String?
 
     let logger = AppLogger()
 
     let taskCoordinator = TaskCoordinator()
     let processRunner = ProcessRunner()
+
+    private var effectiveDefaultConfig = AppConfig.defaultConfig()
+    private var isApplyingManagedConfig = false
 
     private var runtimeService: RuntimeService {
         RuntimeService(config: config, logger: logger, processRunner: processRunner)
@@ -56,6 +65,9 @@ final class AppViewModel: ObservableObject {
             if let tag = runtimeTag {
                 currentRuntimePath = AppPaths.runtimeDirectory.appendingPathComponent(tag, isDirectory: true).path
             }
+
+            loadEffectiveDefaultsForCurrentRuntime()
+            applyPersistedConfigOrDefaults()
             logger.log(.info, "Initialized app directories in \(AppPaths.appSupportRoot.path)")
             await refreshDerivedPaths()
         } catch {
@@ -107,6 +119,11 @@ final class AppViewModel: ObservableObject {
             })
             self.runtimeTag = tag
             self.currentRuntimePath = AppPaths.runtimeDirectory.appendingPathComponent(tag, isDirectory: true).path
+            self.loadEffectiveDefaultsForCurrentRuntime()
+
+            if !self.hasPersistedConfigOverride {
+                self.applyManagedConfig(self.effectiveDefaultConfig)
+            }
         }
     }
 
@@ -258,8 +275,80 @@ final class AppViewModel: ObservableObject {
     }
 
     func resetConfigToDefaults() {
-        config = .defaultConfig()
+        UserDefaults.standard.removeObject(forKey: DefaultsKey.configOverride)
+        applyManagedConfig(effectiveDefaultConfig)
         d2rExecutablePath = config.defaultD2RExecutablePath
+    }
+
+    private var hasPersistedConfigOverride: Bool {
+        UserDefaults.standard.data(forKey: DefaultsKey.configOverride) != nil
+    }
+
+    private func applyManagedConfig(_ newConfig: AppConfig) {
+        isApplyingManagedConfig = true
+        config = newConfig
+        isApplyingManagedConfig = false
+    }
+
+    private func applyPersistedConfigOrDefaults() {
+        if
+            let data = UserDefaults.standard.data(forKey: DefaultsKey.configOverride),
+            let savedConfig = try? JSONDecoder().decode(AppConfig.self, from: data)
+        {
+            applyManagedConfig(savedConfig)
+        } else {
+            applyManagedConfig(effectiveDefaultConfig)
+        }
+    }
+
+    private func persistConfigOverrideIfNeeded() {
+        guard !isApplyingManagedConfig else { return }
+        guard let data = try? JSONEncoder().encode(config) else { return }
+        UserDefaults.standard.set(data, forKey: DefaultsKey.configOverride)
+    }
+
+    private func loadEffectiveDefaultsForCurrentRuntime() {
+        let base = AppConfig.defaultConfig()
+        guard
+            let tag = runtimeTag,
+            let url = remoteConfigURL(forTag: tag)
+        else {
+            effectiveDefaultConfig = base
+            remoteConfigStatus = "Built-in defaults (no remote config)"
+            return
+        }
+
+        do {
+            let data = try Data(contentsOf: url)
+            let remote = try JSONDecoder().decode(RuntimeRemoteConfig.self, from: data)
+            effectiveDefaultConfig = mergeRemoteConfig(remote, into: base)
+            remoteConfigStatus = "Remote config loaded from \(url.lastPathComponent) (\(tag))"
+        } catch {
+            effectiveDefaultConfig = base
+            remoteConfigStatus = "Remote config invalid, using built-in defaults"
+            logger.log(.warning, "Failed to load remote config: \(error.localizedDescription)")
+        }
+    }
+
+    private func remoteConfigURL(forTag tag: String) -> URL? {
+        let runtimeRoot = AppPaths.runtimeDirectory.appendingPathComponent(tag, isDirectory: true)
+        let configURL = runtimeRoot.appendingPathComponent(RuntimeService.remoteConfigFileName, isDirectory: false)
+        return FileManager.default.fileExists(atPath: configURL.path) ? configURL : nil
+    }
+
+    private func mergeRemoteConfig(_ remote: RuntimeRemoteConfig, into base: AppConfig) -> AppConfig {
+        var merged = base
+        if let runtimePaths = remote.runtimePaths { merged.runtimePaths = runtimePaths }
+        if let installerURL = remote.battleNetInstallerDownloadURL { merged.battleNetInstallerDownloadURL = installerURL }
+        if let d2rPath = remote.defaultD2RExecutablePath { merged.defaultD2RExecutablePath = d2rPath }
+        if let wineDebug = remote.wineDebug { merged.wineDebug = wineDebug }
+        if let enableDXVK = remote.enableDXVK { merged.enableDXVK = enableDXVK }
+        if let enableVKD3D = remote.enableVKD3D { merged.enableVKD3D = enableVKD3D }
+        if let useVirtualDesktop = remote.useVirtualDesktop { merged.useVirtualDesktop = useVirtualDesktop }
+        if let virtualDesktopResolution = remote.virtualDesktopResolution { merged.virtualDesktopResolution = virtualDesktopResolution }
+        if let dllOverrides = remote.dllOverrides { merged.dllOverrides = dllOverrides }
+        if let windowedMode = remote.windowedMode { merged.windowedMode = windowedMode }
+        return merged
     }
 
     private func fail(_ error: Error) async {
