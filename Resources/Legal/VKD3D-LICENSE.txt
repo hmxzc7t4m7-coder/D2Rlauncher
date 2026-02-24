@@ -1,0 +1,3 @@
+VKD3D License Placeholder
+
+Replace this file with the exact VKD3D license text shipped in the runtime release asset.

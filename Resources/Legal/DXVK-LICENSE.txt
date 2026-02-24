@@ -1,0 +1,3 @@
+DXVK License Placeholder
+
+Replace this file with the exact DXVK license text shipped in the runtime release asset.

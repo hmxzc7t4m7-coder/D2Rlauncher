@@ -1,0 +1,625 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A20000000000000000000001 /* D2RLauncherApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000001 /* D2RLauncherApp.swift */; };
+		A20000000000000000000002 /* AppPaths.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000002 /* AppPaths.swift */; };
+		A20000000000000000000003 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000003 /* AppError.swift */; };
+		A20000000000000000000004 /* AppLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000004 /* AppLogger.swift */; };
+		A20000000000000000000005 /* TaskCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000005 /* TaskCoordinator.swift */; };
+		A20000000000000000000006 /* ProcessRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000006 /* ProcessRunner.swift */; };
+		A20000000000000000000007 /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000007 /* AppConfig.swift */; };
+		A20000000000000000000008 /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000008 /* AppViewModel.swift */; };
+		A20000000000000000000009 /* GitHubReleaseModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000009 /* GitHubReleaseModels.swift */; };
+		A2000000000000000000000A /* GitHubReleaseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000000000000000000000A /* GitHubReleaseClient.swift */; };
+		A2000000000000000000000B /* RuntimeConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000000000000000000000B /* RuntimeConfiguration.swift */; };
+		A2000000000000000000000C /* RuntimeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000000000000000000000C /* RuntimeService.swift */; };
+		A2000000000000000000000D /* SHA256Verifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000000000000000000000D /* SHA256Verifier.swift */; };
+		A2000000000000000000000E /* PrefixService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000000000000000000000E /* PrefixService.swift */; };
+		A2000000000000000000000F /* WineEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000000000000000000000F /* WineEnvironment.swift */; };
+		A20000000000000000000010 /* BattleNetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000010 /* BattleNetService.swift */; };
+		A20000000000000000000011 /* RepairService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000011 /* RepairService.swift */; };
+		A20000000000000000000012 /* DiagnosticsExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000012 /* DiagnosticsExporter.swift */; };
+		A20000000000000000000013 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000013 /* ContentView.swift */; };
+		A20000000000000000000014 /* StatusBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000014 /* StatusBannerView.swift */; };
+		A20000000000000000000015 /* LogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000015 /* LogsView.swift */; };
+		A20000000000000000000016 /* SettingsSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000016 /* SettingsSheetView.swift */; };
+		A20000000000000000000017 /* AboutLicensesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000017 /* AboutLicensesView.swift */; };
+		A20000000000000000000018 /* LicenseCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000018 /* LicenseCatalog.swift */; };
+		A20000000000000000000019 /* WINE-LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000019 /* WINE-LICENSE.txt */; };
+		A2000000000000000000001A /* DXVK-LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = A1000000000000000000001A /* DXVK-LICENSE.txt */; };
+		A2000000000000000000001B /* VKD3D-LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = A1000000000000000000001B /* VKD3D-LICENSE.txt */; };
+		A2000000000000000000001C /* ThirdPartyNotices.md in Resources */ = {isa = PBXBuildFile; fileRef = A1000000000000000000001C /* ThirdPartyNotices.md */; };
+		A2000000000000000000001D /* SHA256VerifierTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000000000000000000001D /* SHA256VerifierTests.swift */; };
+		A2000000000000000000001E /* ReleaseAssetSelectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000000000000000000001E /* ReleaseAssetSelectionTests.swift */; };
+		A2000000000000000000001F /* PathResolutionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000000000000000000001F /* PathResolutionTests.swift */; };
+		A20000000000000000000020 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A10000000000000000000022 /* XCTest.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A00000000000000000000007 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A00000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A00000000000000000000005;
+			remoteInfo = D2RLauncher;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		A10000000000000000000001 /* D2RLauncherApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = D2RLauncherApp.swift; sourceTree = "<group>"; };
+		A10000000000000000000002 /* AppPaths.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPaths.swift; sourceTree = "<group>"; };
+		A10000000000000000000003 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
+		A10000000000000000000004 /* AppLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLogger.swift; sourceTree = "<group>"; };
+		A10000000000000000000005 /* TaskCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCoordinator.swift; sourceTree = "<group>"; };
+		A10000000000000000000006 /* ProcessRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessRunner.swift; sourceTree = "<group>"; };
+		A10000000000000000000007 /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
+		A10000000000000000000008 /* AppViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppViewModel.swift; sourceTree = "<group>"; };
+		A10000000000000000000009 /* GitHubReleaseModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubReleaseModels.swift; sourceTree = "<group>"; };
+		A1000000000000000000000A /* GitHubReleaseClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubReleaseClient.swift; sourceTree = "<group>"; };
+		A1000000000000000000000B /* RuntimeConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeConfiguration.swift; sourceTree = "<group>"; };
+		A1000000000000000000000C /* RuntimeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeService.swift; sourceTree = "<group>"; };
+		A1000000000000000000000D /* SHA256Verifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SHA256Verifier.swift; sourceTree = "<group>"; };
+		A1000000000000000000000E /* PrefixService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrefixService.swift; sourceTree = "<group>"; };
+		A1000000000000000000000F /* WineEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WineEnvironment.swift; sourceTree = "<group>"; };
+		A10000000000000000000010 /* BattleNetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleNetService.swift; sourceTree = "<group>"; };
+		A10000000000000000000011 /* RepairService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepairService.swift; sourceTree = "<group>"; };
+		A10000000000000000000012 /* DiagnosticsExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsExporter.swift; sourceTree = "<group>"; };
+		A10000000000000000000013 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A10000000000000000000014 /* StatusBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBannerView.swift; sourceTree = "<group>"; };
+		A10000000000000000000015 /* LogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsView.swift; sourceTree = "<group>"; };
+		A10000000000000000000016 /* SettingsSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSheetView.swift; sourceTree = "<group>"; };
+		A10000000000000000000017 /* AboutLicensesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutLicensesView.swift; sourceTree = "<group>"; };
+		A10000000000000000000018 /* LicenseCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseCatalog.swift; sourceTree = "<group>"; };
+		A10000000000000000000019 /* WINE-LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "WINE-LICENSE.txt"; sourceTree = "<group>"; };
+		A1000000000000000000001A /* DXVK-LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "DXVK-LICENSE.txt"; sourceTree = "<group>"; };
+		A1000000000000000000001B /* VKD3D-LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "VKD3D-LICENSE.txt"; sourceTree = "<group>"; };
+		A1000000000000000000001C /* ThirdPartyNotices.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ThirdPartyNotices.md; sourceTree = "<group>"; };
+		A1000000000000000000001D /* SHA256VerifierTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SHA256VerifierTests.swift; sourceTree = "<group>"; };
+		A1000000000000000000001E /* ReleaseAssetSelectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReleaseAssetSelectionTests.swift; sourceTree = "<group>"; };
+		A1000000000000000000001F /* PathResolutionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathResolutionTests.swift; sourceTree = "<group>"; };
+		A10000000000000000000020 /* D2RLauncher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = D2RLauncher.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A10000000000000000000021 /* D2RLauncherTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = D2RLauncherTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A10000000000000000000022 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = System/Library/Frameworks/XCTest.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A00000000000000000000011 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00000000000000000000014 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A20000000000000000000020 /* XCTest.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A00000000000000000000002 = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000020 /* App */,
+				A00000000000000000000021 /* Core */,
+				A00000000000000000000022 /* Runtime */,
+				A00000000000000000000023 /* Wine */,
+				A00000000000000000000024 /* Diagnostics */,
+				A00000000000000000000025 /* UI */,
+				A00000000000000000000026 /* Legal */,
+				A00000000000000000000027 /* Resources */,
+				A00000000000000000000029 /* D2RLauncherTests */,
+				A00000000000000000000003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A00000000000000000000003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000020 /* D2RLauncher.app */,
+				A10000000000000000000021 /* D2RLauncherTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000020 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000001 /* D2RLauncherApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000021 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000002 /* AppPaths.swift */,
+				A10000000000000000000003 /* AppError.swift */,
+				A10000000000000000000004 /* AppLogger.swift */,
+				A10000000000000000000005 /* TaskCoordinator.swift */,
+				A10000000000000000000006 /* ProcessRunner.swift */,
+				A10000000000000000000007 /* AppConfig.swift */,
+				A10000000000000000000008 /* AppViewModel.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000022 /* Runtime */ = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000009 /* GitHubReleaseModels.swift */,
+				A1000000000000000000000A /* GitHubReleaseClient.swift */,
+				A1000000000000000000000B /* RuntimeConfiguration.swift */,
+				A1000000000000000000000C /* RuntimeService.swift */,
+				A1000000000000000000000D /* SHA256Verifier.swift */,
+			);
+			path = Runtime;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000023 /* Wine */ = {
+			isa = PBXGroup;
+			children = (
+				A1000000000000000000000E /* PrefixService.swift */,
+				A1000000000000000000000F /* WineEnvironment.swift */,
+				A10000000000000000000010 /* BattleNetService.swift */,
+				A10000000000000000000011 /* RepairService.swift */,
+			);
+			path = Wine;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000024 /* Diagnostics */ = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000012 /* DiagnosticsExporter.swift */,
+			);
+			path = Diagnostics;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000025 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000013 /* ContentView.swift */,
+				A10000000000000000000014 /* StatusBannerView.swift */,
+				A10000000000000000000015 /* LogsView.swift */,
+				A10000000000000000000016 /* SettingsSheetView.swift */,
+				A10000000000000000000017 /* AboutLicensesView.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000026 /* Legal */ = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000018 /* LicenseCatalog.swift */,
+			);
+			path = Legal;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000027 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000028 /* Legal */,
+				A1000000000000000000001C /* ThirdPartyNotices.md */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000028 /* Legal */ = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000019 /* WINE-LICENSE.txt */,
+				A1000000000000000000001A /* DXVK-LICENSE.txt */,
+				A1000000000000000000001B /* VKD3D-LICENSE.txt */,
+			);
+			path = Legal;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000029 /* D2RLauncherTests */ = {
+			isa = PBXGroup;
+			children = (
+				A1000000000000000000001D /* SHA256VerifierTests.swift */,
+				A1000000000000000000001E /* ReleaseAssetSelectionTests.swift */,
+				A1000000000000000000001F /* PathResolutionTests.swift */,
+			);
+			path = D2RLauncherTests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A00000000000000000000005 /* D2RLauncher */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A00000000000000000000030 /* Build configuration list for PBXNativeTarget "D2RLauncher" */;
+			buildPhases = (
+				A00000000000000000000010 /* Sources */,
+				A00000000000000000000011 /* Frameworks */,
+				A00000000000000000000012 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = D2RLauncher;
+			productName = D2RLauncher;
+			productReference = A10000000000000000000020 /* D2RLauncher.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A00000000000000000000006 /* D2RLauncherTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A00000000000000000000031 /* Build configuration list for PBXNativeTarget "D2RLauncherTests" */;
+			buildPhases = (
+				A00000000000000000000013 /* Sources */,
+				A00000000000000000000014 /* Frameworks */,
+				A00000000000000000000015 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A00000000000000000000008 /* PBXTargetDependency */,
+			);
+			name = D2RLauncherTests;
+			productName = D2RLauncherTests;
+			productReference = A10000000000000000000021 /* D2RLauncherTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A00000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2630;
+				LastUpgradeCheck = 2630;
+				TargetAttributes = {
+					A00000000000000000000005 = {
+						CreatedOnToolsVersion = 26.3;
+					};
+					A00000000000000000000006 = {
+						CreatedOnToolsVersion = 26.3;
+						TestTargetID = A00000000000000000000005;
+					};
+				};
+			};
+			buildConfigurationList = A00000000000000000000004 /* Build configuration list for PBXProject "D2RLauncher" */;
+			compatibilityVersion = "Xcode 16.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A00000000000000000000002;
+			productRefGroup = A00000000000000000000003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A00000000000000000000005 /* D2RLauncher */,
+				A00000000000000000000006 /* D2RLauncherTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A00000000000000000000012 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A20000000000000000000019 /* WINE-LICENSE.txt in Resources */,
+				A2000000000000000000001A /* DXVK-LICENSE.txt in Resources */,
+				A2000000000000000000001B /* VKD3D-LICENSE.txt in Resources */,
+				A2000000000000000000001C /* ThirdPartyNotices.md in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00000000000000000000015 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A00000000000000000000010 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A20000000000000000000001 /* D2RLauncherApp.swift in Sources */,
+				A20000000000000000000002 /* AppPaths.swift in Sources */,
+				A20000000000000000000003 /* AppError.swift in Sources */,
+				A20000000000000000000004 /* AppLogger.swift in Sources */,
+				A20000000000000000000005 /* TaskCoordinator.swift in Sources */,
+				A20000000000000000000006 /* ProcessRunner.swift in Sources */,
+				A20000000000000000000007 /* AppConfig.swift in Sources */,
+				A20000000000000000000008 /* AppViewModel.swift in Sources */,
+				A20000000000000000000009 /* GitHubReleaseModels.swift in Sources */,
+				A2000000000000000000000A /* GitHubReleaseClient.swift in Sources */,
+				A2000000000000000000000B /* RuntimeConfiguration.swift in Sources */,
+				A2000000000000000000000C /* RuntimeService.swift in Sources */,
+				A2000000000000000000000D /* SHA256Verifier.swift in Sources */,
+				A2000000000000000000000E /* PrefixService.swift in Sources */,
+				A2000000000000000000000F /* WineEnvironment.swift in Sources */,
+				A20000000000000000000010 /* BattleNetService.swift in Sources */,
+				A20000000000000000000011 /* RepairService.swift in Sources */,
+				A20000000000000000000012 /* DiagnosticsExporter.swift in Sources */,
+				A20000000000000000000013 /* ContentView.swift in Sources */,
+				A20000000000000000000014 /* StatusBannerView.swift in Sources */,
+				A20000000000000000000015 /* LogsView.swift in Sources */,
+				A20000000000000000000016 /* SettingsSheetView.swift in Sources */,
+				A20000000000000000000017 /* AboutLicensesView.swift in Sources */,
+				A20000000000000000000018 /* LicenseCatalog.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00000000000000000000013 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A2000000000000000000001D /* SHA256VerifierTests.swift in Sources */,
+				A2000000000000000000001E /* ReleaseAssetSelectionTests.swift in Sources */,
+				A2000000000000000000001F /* PathResolutionTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A00000000000000000000008 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A00000000000000000000005 /* D2RLauncher */;
+			targetProxy = A00000000000000000000007 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		A00000000000000000000040 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A00000000000000000000041 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A00000000000000000000042 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.D2RLauncher;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		A00000000000000000000043 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.D2RLauncher;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		A00000000000000000000044 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "";
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.D2RLauncherTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "";
+			};
+			name = Debug;
+		};
+		A00000000000000000000045 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "";
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.D2RLauncherTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A00000000000000000000004 /* Build configuration list for PBXProject "D2RLauncher" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00000000000000000000040 /* Debug */,
+				A00000000000000000000041 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A00000000000000000000030 /* Build configuration list for PBXNativeTarget "D2RLauncher" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00000000000000000000042 /* Debug */,
+				A00000000000000000000043 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A00000000000000000000031 /* Build configuration list for PBXNativeTarget "D2RLauncherTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00000000000000000000044 /* Debug */,
+				A00000000000000000000045 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A00000000000000000000001 /* Project object */;
+}
