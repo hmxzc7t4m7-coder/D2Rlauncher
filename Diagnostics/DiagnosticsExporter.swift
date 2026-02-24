@@ -2,7 +2,7 @@ import AppKit
 import Darwin
 import Foundation
 
-final class DiagnosticsExporter {
+final class DiagnosticsExporter: @unchecked Sendable {
     private let config: AppConfig
     private let logger: AppLogger
     private let processRunner: ProcessRunner

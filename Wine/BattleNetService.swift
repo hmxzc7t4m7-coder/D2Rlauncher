@@ -1,6 +1,6 @@
 import Foundation
 
-final class BattleNetService {
+final class BattleNetService: @unchecked Sendable {
     private let config: AppConfig
     private let logger: AppLogger
     private let processRunner: ProcessRunner
@@ -137,18 +137,16 @@ final class BattleNetService {
 
         let env = WineEnvironment.baseEnvironment(prefixURL: AppPaths.battleNetPrefix, runtimeRoot: runtimeRoot, config: config)
         await logger.log(.info, "Launching \(executable.lastPathComponent) \(arguments.joined(separator: " "))")
-        let logger = self.logger
 
         let result = try await processRunner.run(
             executableURL: executable,
             arguments: arguments,
-            environment: env,
-            outputHandler: { line in
-                Task { @MainActor in
-                    logger.log(.debug, line)
-                }
-            }
+            environment: env
         )
+
+        for line in (result.stdout + "\n" + result.stderr).split(whereSeparator: \.isNewline) {
+            await logger.log(.debug, String(line))
+        }
 
         guard result.exitCode == 0 else {
             throw AppError.operationFailed("Wine launch failed with code \(result.exitCode)")
@@ -167,8 +165,10 @@ final class BattleNetService {
             environment: env
         )
 
+        let logger = self.logger
+        let message = "Launched process PID \(handle.pid): \(arguments.joined(separator: " "))"
         Task { @MainActor in
-            logger.log(.info, "Launched process PID \(handle.pid): \(arguments.joined(separator: " "))")
+            logger.log(.info, message)
         }
     }
 }

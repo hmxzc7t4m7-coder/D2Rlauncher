@@ -1,6 +1,7 @@
 import Foundation
 
-actor TaskCoordinator {
+@MainActor
+final class TaskCoordinator {
     private var isLocked = false
     private var waiters: [CheckedContinuation<Void, Never>] = []
 
@@ -18,10 +19,11 @@ actor TaskCoordinator {
     private func release() {
         if waiters.isEmpty {
             isLocked = false
-        } else {
-            let next = waiters.removeFirst()
-            next.resume()
+            return
         }
+
+        let next = waiters.removeFirst()
+        next.resume()
     }
 
     func runExclusive<T>(named _: String, operation: @MainActor () async throws -> T) async throws -> T {

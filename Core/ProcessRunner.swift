@@ -6,12 +6,12 @@ struct ProcessResult: Sendable {
     let stderr: String
 }
 
-final class ProcessRunner {
+final class ProcessRunner: @unchecked Sendable {
     struct DetachedProcessHandle: Sendable {
         let pid: Int32
     }
 
-    private final class DetachedProcessStore {
+    private final class DetachedProcessStore: @unchecked Sendable {
         private let queue = DispatchQueue(label: "D2RLauncher.ProcessRunner.DetachedStore")
         private var active: [Int32: Process] = [:]
 
@@ -22,7 +22,7 @@ final class ProcessRunner {
         }
 
         func release(pid: Int32) {
-            queue.sync {
+            _ = queue.sync {
                 active.removeValue(forKey: pid)
             }
         }
@@ -84,7 +84,7 @@ final class ProcessRunner {
         arguments: [String],
         environment: [String: String] = [:],
         currentDirectoryURL: URL? = nil,
-        outputHandler: ((String) -> Void)? = nil
+        outputHandler: (@Sendable (String) -> Void)? = nil
     ) async throws -> ProcessResult {
         try await withCheckedThrowingContinuation { continuation in
             let process = Process()

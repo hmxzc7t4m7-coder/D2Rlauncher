@@ -1,6 +1,6 @@
 import Foundation
 
-final class RepairService {
+final class RepairService: @unchecked Sendable {
     private let config: AppConfig
     private let logger: AppLogger
     private let processRunner: ProcessRunner

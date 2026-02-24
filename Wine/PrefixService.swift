@@ -1,6 +1,6 @@
 import Foundation
 
-final class PrefixService {
+final class PrefixService: @unchecked Sendable {
     private let config: AppConfig
     private let logger: AppLogger
     private let processRunner: ProcessRunner
@@ -32,13 +32,12 @@ final class PrefixService {
         let result = try await processRunner.run(
             executableURL: wineboot,
             arguments: ["-u"],
-            environment: env,
-            outputHandler: { line in
-                Task { @MainActor in
-                    self.logger.log(.debug, line)
-                }
-            }
+            environment: env
         )
+
+        for line in (result.stdout + "\n" + result.stderr).split(whereSeparator: \.isNewline) {
+            await logger.log(.debug, String(line))
+        }
 
         guard result.exitCode == 0 else {
             throw AppError.operationFailed("wineboot failed with code \(result.exitCode)")

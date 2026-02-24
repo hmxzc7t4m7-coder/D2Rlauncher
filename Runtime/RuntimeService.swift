@@ -1,6 +1,6 @@
 import Foundation
 
-final class RuntimeService {
+final class RuntimeService: @unchecked Sendable {
     static let currentRuntimeTagDefaultsKey = "currentRuntimeTag"
     static let remoteConfigFileName = "d2r-config.json"
 
