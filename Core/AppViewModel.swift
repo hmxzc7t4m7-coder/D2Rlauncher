@@ -295,7 +295,12 @@ final class AppViewModel: ObservableObject {
             let data = UserDefaults.standard.data(forKey: DefaultsKey.configOverride),
             let savedConfig = try? JSONDecoder().decode(AppConfig.self, from: data)
         {
-            applyManagedConfig(savedConfig)
+            let (repairedConfig, didRepair) = repairedPersistedConfigIfNeeded(savedConfig)
+            applyManagedConfig(repairedConfig)
+            if didRepair {
+                persistConfigOverrideIfNeeded()
+                logger.log(.warning, "Repaired legacy placeholder GitHub repo settings in saved configuration.")
+            }
         } else {
             applyManagedConfig(effectiveDefaultConfig)
         }
@@ -349,6 +354,25 @@ final class AppViewModel: ObservableObject {
         if let dllOverrides = remote.dllOverrides { merged.dllOverrides = dllOverrides }
         if let windowedMode = remote.windowedMode { merged.windowedMode = windowedMode }
         return merged
+    }
+
+    private func repairedPersistedConfigIfNeeded(_ persisted: AppConfig) -> (AppConfig, Bool) {
+        var repaired = persisted
+        var didRepair = false
+
+        let owner = persisted.runtimeRepoOwner.trimmingCharacters(in: .whitespacesAndNewlines)
+        if owner.isEmpty || owner == "YOUR_GH_OWNER" {
+            repaired.runtimeRepoOwner = effectiveDefaultConfig.runtimeRepoOwner
+            didRepair = true
+        }
+
+        let repo = persisted.runtimeRepoName.trimmingCharacters(in: .whitespacesAndNewlines)
+        if repo.isEmpty || repo == "YOUR_GH_REPO" {
+            repaired.runtimeRepoName = effectiveDefaultConfig.runtimeRepoName
+            didRepair = true
+        }
+
+        return (repaired, didRepair)
     }
 
     private func fail(_ error: Error) async {
