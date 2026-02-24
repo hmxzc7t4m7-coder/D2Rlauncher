@@ -25,6 +25,7 @@ final class DiagnosticsExporter {
 
         let infoText = """
         Date: \(Date())
+        App version: \(appVersionString)
         macOS: \(ProcessInfo.processInfo.operatingSystemVersionString)
         Architecture: \(ProcessInfo.processInfo.machineHardwareName)
         Runtime tag: \(runtimeTag ?? "none")
@@ -39,12 +40,7 @@ final class DiagnosticsExporter {
         try infoText.write(to: tempDir.appendingPathComponent("info.txt"), atomically: true, encoding: .utf8)
         try recentLogText.write(to: tempDir.appendingPathComponent("recent_app_log.txt"), atomically: true, encoding: .utf8)
 
-        let runtimeManifest = [
-            "wine64: \(runtimeRoot.appendingPathComponent(config.runtimePaths.wine64RelativePath).path)",
-            "wineserver: \(runtimeRoot.appendingPathComponent(config.runtimePaths.wineserverRelativePath).path)",
-            "wineboot: \(runtimeRoot.appendingPathComponent(config.runtimePaths.winebootRelativePath).path)",
-            "installer: \(runtimeRoot.appendingPathComponent(config.runtimePaths.installerRelativePath).path)"
-        ].joined(separator: "\n")
+        let runtimeManifest = try await runtimeManifestText(runtimeRoot: runtimeRoot)
         try runtimeManifest.write(to: tempDir.appendingPathComponent("runtime_manifest.txt"), atomically: true, encoding: .utf8)
 
         let prefixTree = try prefixTreeListing(maxEntries: 2_000)
@@ -60,6 +56,12 @@ final class DiagnosticsExporter {
         await logger.log(.info, "Diagnostics zip created at \(zipURL.path)")
 
         return zipURL
+    }
+
+    private var appVersionString: String {
+        let shortVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "unknown"
+        let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "unknown"
+        return "\(shortVersion) (\(buildNumber))"
     }
 
     private func prefixTreeListing(maxEntries: Int) throws -> String {
@@ -93,6 +95,57 @@ final class DiagnosticsExporter {
         let env = WineEnvironment.baseEnvironment(prefixURL: AppPaths.battleNetPrefix, runtimeRoot: runtimeRoot, config: config)
         let result = try await processRunner.run(executableURL: wineserver, arguments: ["-v"], environment: env)
         return "Exit code: \(result.exitCode)\nstdout:\n\(result.stdout)\nstderr:\n\(result.stderr)"
+    }
+
+    private func runtimeManifestText(runtimeRoot: URL) async throws -> String {
+        let wine64 = runtimeRoot.appendingPathComponent(config.runtimePaths.wine64RelativePath, isDirectory: false)
+        let wineserver = runtimeRoot.appendingPathComponent(config.runtimePaths.wineserverRelativePath, isDirectory: false)
+        let wineboot = runtimeRoot.appendingPathComponent(config.runtimePaths.winebootRelativePath, isDirectory: false)
+        let installer = runtimeRoot.appendingPathComponent(config.runtimePaths.installerRelativePath, isDirectory: false)
+        let env = WineEnvironment.baseEnvironment(prefixURL: AppPaths.battleNetPrefix, runtimeRoot: runtimeRoot, config: config)
+
+        let wine64Version = try await commandSummaryIfExecutable(
+            executable: wine64,
+            arguments: ["--version"],
+            environment: env
+        )
+        let wineserverVersion = try await commandSummaryIfExecutable(
+            executable: wineserver,
+            arguments: ["-v"],
+            environment: env
+        )
+
+        return [
+            "runtime_root=\(runtimeRoot.path)",
+            "wine64=\(wine64.path)",
+            "wine64_version=\(wine64Version)",
+            "wineserver=\(wineserver.path)",
+            "wineserver_version=\(wineserverVersion)",
+            "wineboot=\(wineboot.path)",
+            "installer=\(installer.path)",
+            "installer_exists=\(FileManager.default.fileExists(atPath: installer.path))",
+        ].joined(separator: "\n")
+    }
+
+    private func commandSummaryIfExecutable(
+        executable: URL,
+        arguments: [String],
+        environment: [String: String]
+    ) async throws -> String {
+        guard FileManager.default.isExecutableFile(atPath: executable.path) else {
+            return "not executable"
+        }
+
+        let result = try await processRunner.run(
+            executableURL: executable,
+            arguments: arguments,
+            environment: environment
+        )
+
+        let output = (result.stdout + "\n" + result.stderr)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .replacingOccurrences(of: "\n", with: " | ")
+        return "exit=\(result.exitCode); output=\(output)"
     }
 
     private func zipDirectory(sourceDirectory: URL, destinationZipURL: URL) async throws {
