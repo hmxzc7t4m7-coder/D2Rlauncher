@@ -18,10 +18,14 @@ final class BattleNetService {
         }
 
         let wine64 = runtimeRoot.appendingPathComponent(config.runtimePaths.wine64RelativePath, isDirectory: false)
-        try await runWine(executable: wine64, arguments: [installerPath.path])
+        try await runWine(runtimeRoot: runtimeRoot, executable: wine64, arguments: [installerPath.path])
     }
 
     func launchBattleNet(runtimeRoot: URL) async throws {
+        guard PrefixService(config: config, logger: logger, processRunner: processRunner).isPrefixInitialized() else {
+            throw AppError.operationFailed("Prefix is not initialized. Run Create/Repair Prefix first.")
+        }
+
         let wine64 = runtimeRoot.appendingPathComponent(config.runtimePaths.wine64RelativePath, isDirectory: false)
         let launcherPath = AppPaths.battleNetPrefix
             .appendingPathComponent("drive_c", isDirectory: true)
@@ -30,20 +34,24 @@ final class BattleNetService {
             .appendingPathComponent("Battle.net Launcher.exe", isDirectory: false)
             .path
 
-        try await runWine(executable: wine64, arguments: [launcherPath])
+        try await runWine(runtimeRoot: runtimeRoot, executable: wine64, arguments: [launcherPath])
     }
 
     func launchD2R(runtimeRoot: URL, d2rExecutablePath: String) async throws {
+        guard PrefixService(config: config, logger: logger, processRunner: processRunner).isPrefixInitialized() else {
+            throw AppError.operationFailed("Prefix is not initialized. Run Create/Repair Prefix first.")
+        }
+
         let wine64 = runtimeRoot.appendingPathComponent(config.runtimePaths.wine64RelativePath, isDirectory: false)
-        try await runWine(executable: wine64, arguments: [d2rExecutablePath])
+        try await runWine(runtimeRoot: runtimeRoot, executable: wine64, arguments: [d2rExecutablePath])
     }
 
-    private func runWine(executable: URL, arguments: [String]) async throws {
+    private func runWine(runtimeRoot: URL, executable: URL, arguments: [String]) async throws {
         guard FileManager.default.isExecutableFile(atPath: executable.path) else {
             throw AppError.fileMissing(executable.path)
         }
 
-        let env = WineEnvironment.baseEnvironment(prefixURL: AppPaths.battleNetPrefix, config: config)
+        let env = WineEnvironment.baseEnvironment(prefixURL: AppPaths.battleNetPrefix, runtimeRoot: runtimeRoot, config: config)
         await logger.log(.info, "Launching \(executable.lastPathComponent) \(arguments.joined(separator: " "))")
 
         let result = try await processRunner.run(

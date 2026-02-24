@@ -17,7 +17,7 @@ final class RepairService {
             throw AppError.fileMissing(wineserver.path)
         }
 
-        let env = WineEnvironment.baseEnvironment(prefixURL: AppPaths.battleNetPrefix, config: config)
+        let env = WineEnvironment.baseEnvironment(prefixURL: AppPaths.battleNetPrefix, runtimeRoot: runtimeRoot, config: config)
         let result = try await processRunner.run(executableURL: wineserver, arguments: ["-k"], environment: env)
         guard result.exitCode == 0 else {
             throw AppError.operationFailed("wineserver -k failed with code \(result.exitCode)")

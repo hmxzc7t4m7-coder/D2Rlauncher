@@ -1,11 +1,17 @@
 import Foundation
 
 struct WineEnvironment {
-    static func baseEnvironment(prefixURL: URL, config: AppConfig) -> [String: String] {
+    static func baseEnvironment(prefixURL: URL, runtimeRoot: URL?, config: AppConfig) -> [String: String] {
         var env: [String: String] = [
             "WINEPREFIX": prefixURL.path,
             "WINEDEBUG": config.wineDebug,
         ]
+
+        if let runtimeRoot {
+            let runtimeBin = runtimeRoot.appendingPathComponent("bin", isDirectory: true).path
+            let currentPath = ProcessInfo.processInfo.environment["PATH"] ?? "/usr/bin:/bin:/usr/sbin:/sbin"
+            env["PATH"] = "\(runtimeBin):\(currentPath)"
+        }
 
         if config.useVirtualDesktop {
             env["WINE_VIRTUAL_DESKTOP"] = config.virtualDesktopResolution
@@ -17,6 +23,7 @@ struct WineEnvironment {
 
         if !config.enableDXVK {
             env["DXVK_DISABLE"] = "1"
+            env["DXVK_HUD"] = "0"
         }
 
         if !config.enableVKD3D {

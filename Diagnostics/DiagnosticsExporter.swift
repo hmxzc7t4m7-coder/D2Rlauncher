@@ -90,7 +90,7 @@ final class DiagnosticsExporter {
             return "wineserver not found at \(wineserver.path)"
         }
 
-        let env = WineEnvironment.baseEnvironment(prefixURL: AppPaths.battleNetPrefix, config: config)
+        let env = WineEnvironment.baseEnvironment(prefixURL: AppPaths.battleNetPrefix, runtimeRoot: runtimeRoot, config: config)
         let result = try await processRunner.run(executableURL: wineserver, arguments: ["-v"], environment: env)
         return "Exit code: \(result.exitCode)\nstdout:\n\(result.stdout)\nstderr:\n\(result.stderr)"
     }
